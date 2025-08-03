@@ -1,17 +1,44 @@
-# from ..utils.editJson import editJson
+# from utils.editJson import editJson
 import os
+import time
 
 class clipboard :
-    def __init__( self , editJson , clipboardPath ) :
+    def __init__( self , editJson ) :
         self.editJson = editJson
-        self.clipboardPath = clipboardPath()
     
     def enterData (self,data) :
-        oldData = self.editJson.readJson()
-        oldData['count'] += 1
-        oldData['data'].append(data)
+        newData = self.editJson.readJson()
+        
+        singleClip = {
+            'time' : time.localtime()  ,
+            'text' : data ,
+            'isPinned' : False
+        }
+        # print('old data : ' , newData)
+        newData['count'] += 1
+        newData['data'].append(singleClip)
+        self.editJson.writeInJson(newData)
     
+    def clearAll (self) :
+        newData = self.editJson.readJson()
+        newData['count'] = 0
+        newData['data'] = []
+        self.editJson.writeInJson(newData)
     
+    def deleteOne ( self , id ) :
+        newData = self.editJson.readJson()
+        newData['count'] -= 1
+        newData['data'] = [data for data in newData['data'] if data['id'] != id]
+        self.editJson.writeInJson(newData)
+    
+    def togglePin ( self , id ) :
+        newData = self.editJson.readJson()
+        for data in newData['data'] :
+            if data['id'] == id :
+                data['isPinned'] = not data['isPinned']
+                break
+        self.editJson.writeInJson(newData)
 
-filePath = os.path.join('data','clipboard')
-print(filePath)
+
+# filePath = os.path.join('data','clipboard')
+# print(filePath)
