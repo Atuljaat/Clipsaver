@@ -1,31 +1,47 @@
-import tkinter as tk
+from tkinter import *
+import pyperclip
 
-def show_menu(event, menu):
-    menu.tk_popup(event.x_root, event.y_root)
+class myUI :
+    
+    def __init__(self , clipboardArray ):
+        self.window = Tk()
+        self.window.title('ClipSaver')
+        self.window.geometry('300x400')
+        self.setupUi(clipboardArray)
+    
+    def setupUi (self , clipboardArray ) :
+        Label(self.window,text="Clipboard",pady=25,font=("Arial",20,"bold")).pack()
+        self.showClipboard(clipboardArray)
+        
+    def start (self) :
+        self.window.mainloop()
+    
+    def copyText (self,myText) :
+        pyperclip.copy(myText)
+        print('printed the text : ' , myText)
+    
+    def copyButton (self,myText,window) :
+        Button(window,text="Copy Text",command=lambda:self.copyText(myText)).pack()
+    
+    def deleteText (self,frame:Frame):
+        frame.destroy()
+    
+    def deleteButton (self , frame , window) :
+        Button(window,text="Delete Text",command=lambda:self.deleteText(frame)).pack()
+    
+    #  singleClip = {
+    #         'time' : time.localtime()  ,
+    #         'text' : data ,
+    #         'isPinned' : False
+    # }
+    
+    
+    def showClipboard (self,clipboardArray) :
+        for copyItem in clipboardArray :
+            myFrame = Frame(self.window)
+            myFrame.pack(pady=5)
+            myLabel = Label(myFrame,text=copyItem['text'])
+            myLabel.pack()
+            self.copyButton(myText=copyItem['text'],window=myFrame)
+            self.deleteButton(frame=myFrame,window=myFrame)
 
-root = tk.Tk()
-root.title("To-Do List with Actions")
-root.geometry("350x250")
-
-todos = ["Buy groceries", "Call mom", "Read a book", "Do homework"]
-
-for i, todo in enumerate(todos):
-    row = tk.Frame(root)
-    row.pack(fill="x", pady=3)
-
-    label = tk.Label(row, text=todo, anchor="w", width=22, font=("Helvetica", 13))
-    label.pack(side="left", padx=(10,0))
-
-    # Create a menu for actions
-    menu = tk.Menu(root, tearoff=0)
-    menu.add_command(label="Edit")
-    menu.add_command(label="Mark as Done")
-    menu.add_command(label="Delete")
-
-    # Three dots button
-    btn = tk.Button(row, text="⋮", font=("Helvetica", 15), width=2, relief="flat")
-    btn.pack(side="right", padx=(0,15))
-    # Bind right-click or button click to menu popup
-    btn.bind("<Button-1>", lambda event, m=menu: show_menu(event, m))
-
-root.mainloop()

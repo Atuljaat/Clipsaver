@@ -10,7 +10,7 @@ class clipboard :
         newData = self.editJson.readJson()
         
         singleClip = {
-            'time' : time.localtime()  ,
+            # 'time' : time.localtime()  ,
             'text' : data ,
             'isPinned' : False
         }

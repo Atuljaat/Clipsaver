@@ -3,6 +3,7 @@ from core.clipboard import clipboard
 import os
 import time
 from core.trackKeys import keyboardListener
+from ui.front import myUI
 
 path = os.path.join('.','data','clipboard.json')
 
@@ -14,5 +15,9 @@ path = os.path.join('.','data','clipboard.json')
 jsonObj = editJson(path)
 clipboardObj = clipboard(jsonObj)
 d = keyboardListener(clipboardObj)
-d.start()
+jsonData = (jsonObj.readJson())['data']
+print(jsonData)
+myui = myUI(jsonData)
+# d.start()
+myui.start()
 # clipboardObj.enterData(mydata)
